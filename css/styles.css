@@ -1,7 +1,9 @@
 
 #mapContainer {
   backgroundColor: #ccc;
-  flex-grow: 1
+  /* flex-grow: */
+  height: 100%;
+  width: 100%;
 }
 
 html, body {
@@ -10,15 +12,36 @@ html, body {
   font-family: sans-serif;
 }
 
-.container {
-  display: flex;
+.container-div {
+  /* display: flex; */
   height: 100%;
+  width: 100%;
+  position: relative;
+
 }
 
 .sidebar {
   width: 400px;
   height: 100%;
   padding: 15px;
+  padding-bottom: 30px;
+  position: absolute;
+  z-index: 10;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-inner {
+  background: #8856a7;
+  flex-grow: 1;
+  opacity: .9;
+  border-radius: 5px;
+}
+
+.sidebar-innest {
+  dispaly: flex;
+  margin: 10;
 }
 
 .sidebar h3 {
@@ -31,10 +54,10 @@ html, body {
 /* TOGGLE STYLING */
 .toggle-container{
   background-color: #f5f5f5;
-  border-radius: 3px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); */
   padding: 10px;
-  opacity: .9;
+  opacity: .5;
 }
 
 .toggle-container h4{
@@ -52,13 +75,6 @@ html, body {
   right: 10px;
   z-index: 1;
 }
-
-/* #toggle-stormwater{
-  position: absolute;
-  top: 200px;
-  right: 10px;
-  z-index: 1;
-} */
 
 .input-group-text {
   background-color: #f5f5f5;
