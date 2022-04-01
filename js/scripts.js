@@ -95,7 +95,7 @@ map.on('load', function() {
 
   map.on('click', 'ModeShare20-fill', function(e) {
     var features20 = map.queryRenderedFeatures(e.point)
-    var featureOfInterestProperties20 = features[0].properties
+    var featureOfInterestProperties20 = features20[0].properties
 
 
     var ctNum20 = featureOfInterestProperties['NAMELSAD']
@@ -118,7 +118,7 @@ map.on('load', function() {
 
   map.on('click', 'ModeShare14-fill', function(e) {
     var features14 = map.queryRenderedFeatures(e.point)
-    var featureOfInterestProperties14 = features[0].properties
+    var featureOfInterestProperties14 = features14[0].properties
 
 
     var ctNum14 = featureOfInterestProperties14['NAMELSAD']
