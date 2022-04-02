@@ -36,7 +36,7 @@ html, body {
   background: #8856a7;
   flex-grow: 1;
   opacity: .9;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 
 .sidebar-innest {
@@ -47,6 +47,15 @@ html, body {
 .sidebar h3 {
   font-size: 30px;
   text-align: center;
+  color: #ffffff;
+}
+
+.sidebar-inner p {
+  color: #ffffff;
+}
+
+.sidebar-innest h4 {
+  color: #ffffff;
 }
 
 
@@ -54,7 +63,7 @@ html, body {
 /* TOGGLE STYLING */
 .toggle-container{
   background-color: #8856a7;
-  border-radius: 5px;
+  border-radius: 10px;
   /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); */
   padding: 10px;
   opacity: .9;
@@ -63,7 +72,7 @@ html, body {
 .toggle-container h4{
   font-size: 15px;
   font-weight: 700;
-  color: #008999;
+  color: #ffffff;
   text-align: center;
   width: 180px;
 }
@@ -82,9 +91,8 @@ html, body {
   font-size:14px;
 }
 
-.input-group-addon.primary {
-    color: rgb(255, 255, 255);
-    /* background-color: rgb(50, 118, 177);
-    border-color: rgb(40, 94, 142); */
+.input-group {
+  background-color:#8856a7;
+  opacity: .9;
 }
 /* End toggle styling */

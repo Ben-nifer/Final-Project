@@ -6,17 +6,21 @@
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmVubmlmZXIiLCJhIjoiY2t6bmZpaTB4MmNyMjJucXIyM2s2a3M5OCJ9.yfIClB9zes7RF2saxS5JlA'
 
-var NYCenter = [-74.042503, 40.708733] //approximating city center
-// 40.708733, -74.042503
+var NYCenter = [-73.982740, 40.751000] //approximating city center
+// 40.751000, -73.982740
 
 var map = new mapboxgl.Map({
   container: 'mapContainer', // HTML container id
   style: 'mapbox://styles/mapbox/dark-v9', // look for something that can better display transit routes/ stops. Contextualize the numbers
   center: NYCenter, // starting position as [lng, lat]
-  zoom: 9.8,
+  zoom: 10.5,
   minzoom: 9.5,
 
 });
+
+// https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/
+let hoveredMS20Id = null;
+let hoveredMS14Id = null;
 
 map.on('load', function() {
 
@@ -61,8 +65,14 @@ map.on('load', function() {
         .106700,
         '#810f7c',
       ],
-      'fill-opacity': .5
-    }
+      'fill-outline-color': '#ccc',
+      'fill-opacity': [
+          'case',
+          ['boolean', ['feature-state', 'hover'], false],
+          1,
+          0.5
+        ]
+    },
   });
 
   map.addLayer({
@@ -86,11 +96,82 @@ map.on('load', function() {
         .106700,
         '#810f7c',
       ],
-      'fill-opacity': .5
+      'fill-outline-color': '#ccc',
+      'fill-opacity': .5,
     },
     layout: {
       visibility: "none"
+    },
+  });
+
+  map.addLayer({
+    id: 'stations2019-dots',
+    type: 'circle',
+    source: 'Stations2019',
+    paint: {
+      // make circles larger as you zoom from 9.8 to 22
+      // https://docs.mapbox.com/mapbox-gl-js/example/data-driven-circle-colors/
+      'circle-radius': {
+        'base': 1.75,
+        'stops': [
+            [9.8, 2],
+            [22, 180]
+        ]
+      },
+      'circle-color': '#2d427b'
+    },
+  });
+
+  map.addLayer({
+    id: 'stations2013-dots',
+    type: 'circle',
+    source: 'Stations2013',
+    paint: {
+      // make circles larger as you zoom from 9.8 to 22
+      // https://docs.mapbox.com/mapbox-gl-js/example/data-driven-circle-colors/
+      'circle-radius': {
+        'base': 1.75,
+        'stops': [
+            [9.8, 2],
+            [30, 280]
+        ]
+      },
+      'circle-color': '#2d427b'
+    },
+    layout: {
+      visibility: "none"
+    },
+  });
+
+  // When the user moves their mouse over the state-fill layer, we'll update the
+// feature state for the feature under the mouse.
+// https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/
+  map.on('mousemove', 'ModeShare20-fill', (e) => {
+    if (e.features.length > 0) {
+      if (hoveredMS20Id !== null) {
+        map.setFeatureState(
+          { source: 'ModeShare20', id: hoveredMS20Id },
+          { hover: false }
+        );
+      }
+      hoveredMS20Id = e.features[0].id;
+      map.setFeatureState(
+        { source: 'ModeShare20', id: hoveredMS20Id },
+        { hover: true }
+      );
     }
+  });
+
+// When the mouse leaves the state-fill layer, update the feature state of the
+// previously hovered feature.
+  map.on('mouseleave', 'ModeShare20-fill', () => {
+    if (hoveredMS20Id !== null) {
+      map.setFeatureState(
+        { source: 'ModeShare20', id: hoveredMS20Id },
+        { hover: false }
+      );
+    }
+    hoveredMS20Id = null;
   });
 
   map.on('click', 'ModeShare20-fill', function(e) {
@@ -98,7 +179,7 @@ map.on('load', function() {
     var featureOfInterestProperties20 = features20[0].properties
 
 
-    var ctNum20 = featureOfInterestProperties['NAMELSAD']
+    var ctNum20 = featureOfInterestProperties20['NAMELSAD']
     var percBike20 = featureOfInterestProperties20['modeShare2020_bikePerc20']
     var percSub20 = featureOfInterestProperties20['modeShare2020_subwayPerc20']
     var percBus20 = featureOfInterestProperties20['modeShare2020_busPerc20']
@@ -143,27 +224,35 @@ map.on('load', function() {
         if (this.id == '2020'){
           var selectedLayer = "ModeShare20-fill"
           var unselectedLayer = "ModeShare14-fill"
-          // var unselectedId = "#500"
-          // $('#floodplainStat').html(stat100);
+          var selectedStationLayer = "stations2019-dots"
+          var unselectedStationLayer = "stations2013-dots"
 
         } else if (this.id == '2014'){
           var selectedLayer = "ModeShare14-fill"
           var unselectedLayer = "ModeShare20-fill"
-          // var unselectedId = "#100"
-          // $('#floodplainStat').html(stat500);
+          var selectedStationLayer = "stations2013-dots"
+          var unselectedStationLayer = "stations2019-dots"
         }
 
 
-        // get and toggle radio button checked status for unselected layer
-        // $(unselectedId).prop('checked', false);
 
-        // get and toggle visibility on for selected layer
+        // get and toggle visibility on for selected layer(s)
         var visibility = map.getLayoutProperty(
           selectedLayer,'visibility'
         );
 
         if (visibility == 'none'){
-          map.setLayoutProperty(selectedLayer, 'visibility', 'visible');
+          map.setLayoutProperty(
+            selectedLayer, 'visibility', 'visible');
+        };
+
+        var visibility = map.getLayoutProperty(
+          selectedStationLayer,'visibility'
+        );
+
+        if (visibility == 'none'){
+          map.setLayoutProperty(
+            selectedStationLayer, 'visibility', 'visible');
         };
 
         // get and toggle visibility off for unselected layer
@@ -172,7 +261,17 @@ map.on('load', function() {
         );
 
         if (visibility != 'none'){
-          map.setLayoutProperty(unselectedLayer, 'visibility', 'none');
+          map.setLayoutProperty(
+            unselectedLayer, 'visibility', 'none');
+        };
+
+        var visibility = map.getLayoutProperty(
+          unselectedStationLayer,'visibility'
+        );
+
+        if (visibility != 'none'){
+          map.setLayoutProperty(
+            unselectedStationLayer, 'visibility', 'none');
         };
       });
 
