@@ -21,17 +21,23 @@ var map = new mapboxgl.Map({
 // https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/
 let hoveredMS20Id = null;
 let hoveredMS14Id = null;
+let clickedMS20Id = null;
+let clickedMS14Id = null;
+
+
 
 map.on('load', function() {
 
   map.addSource('ModeShare20', {
     type: 'geojson',
     data: './data/ModeShare20.geojson',
+    generateId: true,
   });
 
   map.addSource('ModeShare14', {
     type: 'geojson',
     data: './data/ModeShare14.geojson',
+    generateId: true,
   });
 
   map.addSource('Stations2019', {
@@ -69,9 +75,9 @@ map.on('load', function() {
       'fill-opacity': [
           'case',
           ['boolean', ['feature-state', 'hover'], false],
-          1,
+          .7,
           0.5
-        ]
+        ],
     },
   });
 
@@ -97,7 +103,13 @@ map.on('load', function() {
         '#810f7c',
       ],
       'fill-outline-color': '#ccc',
-      'fill-opacity': .5,
+      'fill-opacity': [
+          'case',
+          ['boolean', ['feature-state', 'hover'], false],
+          .7,
+          0.5
+        ],
+
     },
     layout: {
       visibility: "none"
@@ -143,9 +155,10 @@ map.on('load', function() {
     },
   });
 
-  // When the user moves their mouse over the state-fill layer, we'll update the
+// When the user moves their mouse over the state-fill layer, we'll update the
 // feature state for the feature under the mouse.
 // https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/
+// START MAP.ON MOUSEMOVE FOR 2020 FILL
   map.on('mousemove', 'ModeShare20-fill', (e) => {
     if (e.features.length > 0) {
       if (hoveredMS20Id !== null) {
@@ -173,6 +186,75 @@ map.on('load', function() {
     }
     hoveredMS20Id = null;
   });
+// END MAP.ON MOUSEMOVE FOR 2020 FILL
+
+// START MAP.ON MOUSEMOVE FOR 2014 FILL
+
+  map.on('mousemove', 'ModeShare14-fill', (e) => {
+    if (e.features.length > 0) {
+      if (hoveredMS14Id !== null) {
+        map.setFeatureState(
+          { source: 'ModeShare14', id: hoveredMS14Id },
+          { hover: false }
+        );
+      }
+      hoveredMS14Id = e.features[0].id;
+      map.setFeatureState(
+        { source: 'ModeShare14', id: hoveredMS14Id },
+        { hover: true }
+      );
+    }
+  });
+
+// When the mouse leaves the state-fill layer, update the feature state of the
+// previously hovered feature.
+  map.on('mouseleave', 'ModeShare14-fill', () => {
+    if (hoveredMS14Id !== null) {
+      map.setFeatureState(
+        { source: 'ModeShare14', id: hoveredMS14Id },
+        { hover: false }
+      );
+    }
+    hoveredMS14Id = null;
+  });
+
+// END MAP.ON MOUSEMOVE FOR 2014 FILL
+
+// START MAP.ON CLICK OPACITY; https://stackoverflow.com/questions/60096104/change-polygon-color-on-click-with-mapbox
+
+  map.on('click', 'ModeShare20-fill', function(e) {
+          if (e.features.length > 0) {
+              if (clickedMS20Id) {
+                  map.setFeatureState(
+                      { source: 'ModeShare20', id: clickedMS20Id },
+                      { click: false }
+                    );
+                  }
+                  clickedMS20Id = e.features[0].id;
+                  map.setFeatureState(
+                    { source: 'ModeShare20', id: clickedMS20Id },
+                    { click: true }
+                  );
+                }
+  });
+
+  map.on('click', 'ModeShare14-fill', function(e) {
+          if (e.features.length > 0) {
+              if (clickedMS14Id) {
+                  map.setFeatureState(
+                      { source: 'ModeShare14', id: clickedMS14Id },
+                      { click: false }
+                    );
+                  }
+                  clickedMS14Id = e.features[0].id;
+                  map.setFeatureState(
+                    { source: 'ModeShare14', id: clickedMS14Id },
+                    { click: true }
+                  );
+                }
+  });
+
+// END MAP.ON CLICK OPACITY
 
   map.on('click', 'ModeShare20-fill', function(e) {
     var features20 = map.queryRenderedFeatures(e.point)
@@ -233,8 +315,6 @@ map.on('load', function() {
           var selectedStationLayer = "stations2013-dots"
           var unselectedStationLayer = "stations2019-dots"
         }
-
-
 
         // get and toggle visibility on for selected layer(s)
         var visibility = map.getLayoutProperty(
