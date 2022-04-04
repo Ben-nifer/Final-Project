@@ -14,8 +14,7 @@ var map = new mapboxgl.Map({
   style: 'mapbox://styles/mapbox/dark-v9',
   center: NYCenter, // starting position as [lng, lat]
   zoom: 10.5,
-  minzoom: 10.5,
-
+  minzoom: 10.5, // why is this not working?
 });
 
 // https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/
