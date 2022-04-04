@@ -356,3 +356,7 @@ map.on('load', function() {
       });
 
 })
+
+$(document).ready(function(){
+        $("#openModal").modal('show');
+    });
