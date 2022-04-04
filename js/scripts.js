@@ -155,7 +155,7 @@ map.on('load', function() {
     },
   });
 
-// When the user moves their mouse over the state-fill layer, we'll update the
+// When the user moves their mouse over the fill layer, we'll update the
 // feature state for the feature under the mouse.
 // https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/
 // START MAP.ON MOUSEMOVE FOR 2020 FILL
@@ -175,7 +175,7 @@ map.on('load', function() {
     }
   });
 
-// When the mouse leaves the state-fill layer, update the feature state of the
+// When the mouse leaves the fill layer, update the feature state of the
 // previously hovered feature.
   map.on('mouseleave', 'ModeShare20-fill', () => {
     if (hoveredMS20Id !== null) {
@@ -206,7 +206,7 @@ map.on('load', function() {
     }
   });
 
-// When the mouse leaves the state-fill layer, update the feature state of the
+// When the mouse leaves the fill layer, update the feature state of the
 // previously hovered feature.
   map.on('mouseleave', 'ModeShare14-fill', () => {
     if (hoveredMS14Id !== null) {
@@ -221,41 +221,44 @@ map.on('load', function() {
 // END MAP.ON MOUSEMOVE FOR 2014 FILL
 
 // START MAP.ON CLICK OPACITY; https://stackoverflow.com/questions/60096104/change-polygon-color-on-click-with-mapbox
+// As of now, not working - might be a problem with putting two opacity conditions in addLayer paint section
+// So, commented out for now
 
-  map.on('click', 'ModeShare20-fill', function(e) {
-          if (e.features.length > 0) {
-              if (clickedMS20Id) {
-                  map.setFeatureState(
-                      { source: 'ModeShare20', id: clickedMS20Id },
-                      { click: false }
-                    );
-                  }
-                  clickedMS20Id = e.features[0].id;
-                  map.setFeatureState(
-                    { source: 'ModeShare20', id: clickedMS20Id },
-                    { click: true }
-                  );
-                }
-  });
-
-  map.on('click', 'ModeShare14-fill', function(e) {
-          if (e.features.length > 0) {
-              if (clickedMS14Id) {
-                  map.setFeatureState(
-                      { source: 'ModeShare14', id: clickedMS14Id },
-                      { click: false }
-                    );
-                  }
-                  clickedMS14Id = e.features[0].id;
-                  map.setFeatureState(
-                    { source: 'ModeShare14', id: clickedMS14Id },
-                    { click: true }
-                  );
-                }
-  });
+  // map.on('click', 'ModeShare20-fill', function(e) {
+  //         if (e.features.length > 0) {
+  //             if (clickedMS20Id) {
+  //                 map.setFeatureState(
+  //                     { source: 'ModeShare20', id: clickedMS20Id },
+  //                     { click: false }
+  //                   );
+  //                 }
+  //                 clickedMS20Id = e.features[0].id;
+  //                 map.setFeatureState(
+  //                   { source: 'ModeShare20', id: clickedMS20Id },
+  //                   { click: true }
+  //                 );
+  //               }
+  // });
+  //
+  // map.on('click', 'ModeShare14-fill', function(e) {
+  //         if (e.features.length > 0) {
+  //             if (clickedMS14Id) {
+  //                 map.setFeatureState(
+  //                     { source: 'ModeShare14', id: clickedMS14Id },
+  //                     { click: false }
+  //                   );
+  //                 }
+  //                 clickedMS14Id = e.features[0].id;
+  //                 map.setFeatureState(
+  //                   { source: 'ModeShare14', id: clickedMS14Id },
+  //                   { click: true }
+  //                 );
+  //               }
+  // });
 
 // END MAP.ON CLICK OPACITY
 
+// click on census tracts to get mode share info
   map.on('click', 'ModeShare20-fill', function(e) {
     var features20 = map.queryRenderedFeatures(e.point)
     var featureOfInterestProperties20 = features20[0].properties

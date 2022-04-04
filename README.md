@@ -1,6 +1,6 @@
 # Bike Share Access and Commuter Behavior in NYC
 
-## Showing Census Tract Mode Share Relative to Citibike Station Network
+## Census Tract Mode Share Relative to Citibike Station Network
 <img width="1236" alt="Screen Shot 2022-04-04 at 12 03 28 AM" src="https://user-images.githubusercontent.com/98992153/161471914-40b0c65c-eb72-4e4a-9bf8-ec0150ca09d8.png">
 
 ## About
@@ -10,3 +10,7 @@ Mode share data is taken from the American Community Survey 5 Year Estimates fro
 Citi Bike stations shown on the map are from 2013 and 2019 to account for the time it may take for commuters to change their behavior. Some census tracts from 2020 have no data, so some tracts on the 2020 layer will show up blank.
 
 ## Methodology
+I use the census API in R to get the mode share data I need, filter for subway, bus, biking, and walking, then add columns for percentages. This census data is tied to geo ids, which are then joined to tract geometries in QGIS. Citi Bike station data is filtered from Citi Bike's monthly ride data.
+
+
+This project was submitted for an NYU Wagner web mapping class. It is still a work in progress and open to input. 
