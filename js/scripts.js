@@ -6,23 +6,24 @@
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmVubmlmZXIiLCJhIjoiY2t6bmZpaTB4MmNyMjJucXIyM2s2a3M5OCJ9.yfIClB9zes7RF2saxS5JlA'
 
-var NYCenter = [-73.982740, 40.751000] //approximating city center
-// 40.751000, -73.982740
+var NYCenter = [-73.982740, 40.751000]
+
 
 var map = new mapboxgl.Map({
   container: 'mapContainer', // HTML container id
-  style: 'mapbox://styles/mapbox/dark-v9', // look for something that can better display transit routes/ stops. Contextualize the numbers
+  style: 'mapbox://styles/mapbox/dark-v9',
   center: NYCenter, // starting position as [lng, lat]
   zoom: 10.5,
-  minzoom: 9.5,
+  minzoom: 10.5,
 
 });
 
 // https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/
+// part of on hover and on click sccript
 let hoveredMS20Id = null;
 let hoveredMS14Id = null;
-let clickedMS20Id = null;
-let clickedMS14Id = null;
+// let clickedMS20Id = null;
+// let clickedMS14Id = null;
 
 
 
